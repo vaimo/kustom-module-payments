@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * This file is part of the Klarna KP module
+  *
+  * (c) Klarna Bank AB (publ)
+  *
+  * For the full copyright and license information, please view the NOTICE
+  * and LICENSE files that were distributed with this source code.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="KlarnaPaymentsPlacingOrderWithNonKlarnaPaymentMethodTest">
+        <annotations>
+            <features value="Klarna Payments"/>
+            <stories value="Placing order with non-Klarna method"/>
+            <title value="Placing order with non-Klarna method"/>
+            <description value="Placing order with non-Klarna method"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="KP_NON_KP_DISABLED"/>
+            <group value="Klarna_KP"/>
+        </annotations>
+        <!--Log in to store front as customer-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="customerLogin">
+            <argument name="Customer" value="$$marketDefaultCustomerInstance$$" />
+        </actionGroup>
+
+        <!--Go to product page-->
+        <actionGroup ref="KlarnaGoToCreatedProductPageAndWaitForAddToCartActionGroup" stepKey="GoToCreatedSimpleProductPage">
+            <argument name="url" value="$$defaultSimpleProduct.custom_attributes[url_key]$$.html"/>
+        </actionGroup>
+
+        <!--Add product to shopping cart-->
+        <actionGroup ref="AddToCartFromStorefrontProductPageActionGroup" stepKey="addToCartFromStorefrontProductPage">
+            <argument name="productName" value="$$defaultSimpleProduct.name$$"/>
+        </actionGroup>
+
+        <!--Go to checkout-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart"/>
+        <waitForPageLoad stepKey="waitForCheckoutPageLoad"/>
+
+        <!--Select shipping method and continue to payments-->
+        <click selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="selectFirstShippingMethod"/>
+        <waitForElement selector="{{CheckoutShippingMethodsSection.next}}" time="30" stepKey="waitForShippingMethodSelect"/>
+        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickNextOnShippingMethodLoad"/>
+
+        <!--Place order with Check/Money Order payment-->
+        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderMethod"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="ClickPlaceOrderButton"/>
+
+        <!--Confirm redirection to success page-->
+        <waitForElementVisible selector="{{CheckoutSuccessMainSection.successTitle}}" time="30" stepKey="waitForSuccessPageTitle"/>
+        <waitForElementVisible selector="{{CheckoutSuccessMainSection.success}}" time="30" stepKey="waitForSuccessPageSuccessBlock"/>
+    </test>
+</tests>

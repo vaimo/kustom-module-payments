@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * This file is part of the Klarna KP module
+  *
+  * (c) Klarna Bank AB (publ)
+  *
+  * For the full copyright and license information, please view the NOTICE
+  * and LICENSE files that were distributed with this source code.
+  */
+-->
+<suites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Suite/etc/suiteSchema.xsd">
+    <suite name="KlarnaPaymentsSuite">
+        <before>
+            <createData entity="Klarna_DE_Customer_B2C" stepKey="marketDefaultCustomerInstance"/>
+            <createData entity="DE_Rate_1" stepKey="createdTaxRate"/>
+            <createData entity="SimpleTwo" stepKey="defaultSimpleProduct">
+                <field key="price">123.45</field>
+            </createData>
+
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminCreateTaxRuleActionGroup" stepKey="createTaxRule">
+                <argument name="taxRule" value="SimpleTaxRule"/>
+                <argument name="taxRate" value="$$createdTaxRate$$"/>
+            </actionGroup>
+
+            <actionGroup ref="KlarnaConfigureForMarketActionGroup" stepKey="configureForMarket">
+                <argument name="country" value="DE"/>
+                <argument name="currency" value="EUR"/>
+                <argument name="vat" value="1"/>
+                <argument name="price_display" value="1"/>
+                <argument name="tax_price_display" value="2"/>
+                <argument name="region" value="82"/>
+            </actionGroup>
+
+            <magentoCLI command="config:set klarna/api/region eu" stepKey="region"/>
+            <magentoCLI command="config:set klarna/api_eu/api_mode 1" stepKey="mode"/>
+            <magentoCLI command="config:set klarna/api_eu/username_playground {{_CREDS.klarna/eu_api_username}}" stepKey="configureApiMerchantId"/>
+            <magentoCLI command="config:set klarna/api_eu/password_playground {{_CREDS.klarna/eu_api_secret}}" stepKey="configureApiSecret"/>
+            <magentoCLI command="config:set payment/klarna_kp/active 1" stepKey="enableKp"/>
+
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="signOutFromAdmin"/>
+
+            <magentoCLI command="cache:clean" stepKey="cacheClean"/>
+            <magentoCron stepKey="runCronIndex" groups="index"/>
+        </before>
+        <after>
+        </after>
+        <include>
+            <group name="Klarna_KP"/>
+        </include>
+    </suite>
+</suites>

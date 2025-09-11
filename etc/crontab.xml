@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Klarna Bank AB (publ)
+ *
+ * For the full copyright and license information, please view the NOTICE
+ * and LICENSE files that were distributed with this source code.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="klarna_payments_quote_clean_old_entries" instance="Klarna\Kp\Cron\CleanKlarnaQuoteTableCronJob" method="execute">
+            <schedule>0 0 * * 6</schedule>
+        </job>
+    </group>
+</config>

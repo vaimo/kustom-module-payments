@@ -2,7 +2,7 @@
    "name": "vaimo/kustom-module-payments",
     "type": "magento2-module",
     "description": "Kustom Payments Magento 2 Extension",
-    "version": "10.0.18",
+    "version": "10.0.19",
     "license": "Apache-2.0",
     "require": {
         "vaimo/kustom-module-admin-settings": "^1",

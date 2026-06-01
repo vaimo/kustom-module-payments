@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © Klarna Bank AB (publ)
  *
@@ -10,7 +11,7 @@ namespace Klarna\Kp\Test\Unit\Model\Api\Builder\Customer;
 
 use Klarna\Kp\Model\Api\Builder\Customer\TypeResolver;
 use Magento\Quote\Model\Quote;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Klarna\Base\Test\Unit\Mock\TestCase;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Store\Model\Store;
@@ -38,6 +39,7 @@ class TypeResolverTest extends TestCase
      */
     private Address $billingAddress;
 
+    #[DataProvider('addressDifferentStatesDataProvider')]
     /**
      * @dataProvider addressDifferentStatesDataProvider
      *
@@ -57,6 +59,7 @@ class TypeResolverTest extends TestCase
         static::assertEquals($expected, $this->model->getData($this->quote));
     }
 
+    #[DataProvider('addressDifferentStatesDataProvider')]
     /**
      * @dataProvider addressDifferentStatesDataProvider
      *
@@ -83,7 +86,7 @@ class TypeResolverTest extends TestCase
      *
      * @return array
      */
-    public function addressDifferentStatesDataProvider(): array
+    public static function addressDifferentStatesDataProvider(): array
     {
         return [
             [

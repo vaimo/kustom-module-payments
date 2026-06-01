@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © Klarna Bank AB (publ)
  *
@@ -10,6 +11,7 @@ namespace Klarna\Kp\Test\Unit\Model\System\Message;
 
 use Klarna\Base\Test\Unit\Mock\TestCase;
 use Klarna\Kp\Model\System\Message\AuthorizationCallbackHealthCheck;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AuthorizationCallbackHealthCheckTest extends TestCase
 {
@@ -23,6 +25,7 @@ class AuthorizationCallbackHealthCheckTest extends TestCase
         $this->authorizationCallbackHealthCheck = parent::setUpMocks(AuthorizationCallbackHealthCheck::class);
     }
 
+    #[DataProvider('orderAttemptsDataProvider')]
     /**
      * @dataProvider orderAttemptsDataProvider
      *
@@ -55,7 +58,7 @@ class AuthorizationCallbackHealthCheckTest extends TestCase
         $this->assertContains($this->authorizationCallbackHealthCheck->getSeverity(), [1, 2]);
     }
 
-    public function orderAttemptsDataProvider(): array
+    public static function orderAttemptsDataProvider(): array
     {
         return [
             [

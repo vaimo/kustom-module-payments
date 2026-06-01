@@ -10,6 +10,7 @@ namespace Klarna\Kp\Test\Unit\Model\PaymentMethods;
 
 use Klarna\Base\Exception as KlarnaException;
 use Klarna\Kp\Model\PaymentMethods\JsLayoutUpdater;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Klarna\Base\Test\Unit\Mock\TestCase;
 use Klarna\Kp\Model\Quote as KlarnaQuote;
@@ -30,6 +31,7 @@ class JsLayoutUpdaterTest extends TestCase
      */
     private KlarnaQuote $klarnaQuote;
 
+    #[DataProvider('jsLayoutDataProvider')]
     /**
      * @dataProvider jsLayoutDataProvider
      */
@@ -42,6 +44,7 @@ class JsLayoutUpdaterTest extends TestCase
         static::assertSame($initialConfiguration, $result);
     }
 
+    #[DataProvider('jsLayoutDataProvider')]
     /**
      * @dataProvider jsLayoutDataProvider
      */
@@ -55,6 +58,7 @@ class JsLayoutUpdaterTest extends TestCase
         static::assertSame($initialConfiguration, $result);
     }
 
+    #[DataProvider('jsLayoutDataProvider')]
     /**
      * @dataProvider jsLayoutDataProvider
      */
@@ -81,6 +85,7 @@ class JsLayoutUpdaterTest extends TestCase
         static::assertSame($expected, $result);
     }
 
+    #[DataProvider('jsLayoutDataProvider')]
     /**
      * @dataProvider jsLayoutDataProvider
      */
@@ -95,7 +100,7 @@ class JsLayoutUpdaterTest extends TestCase
         static::assertSame($expected, $result);
     }
 
-    public function jsLayoutDataProvider(): array
+    public static function jsLayoutDataProvider(): array
     {
         return [
             [

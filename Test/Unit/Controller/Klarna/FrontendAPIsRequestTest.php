@@ -1,24 +1,27 @@
 <?php
+
 /**
  * Copyright © Klarna Bank AB (publ)
  *
  * For the full copyright and license information, please view the NOTICE
  * and LICENSE files that were distributed with this source code.
  */
+
 declare(strict_types=1);
 
 namespace Klarna\Kp\Test\Unit\Controller\Klarna;
 
 use Klarna\Base\Api\RequestHandlerInterface;
-use Klarna\Base\Test\Unit\Mock\MockFactory;
 use Klarna\Base\Test\Unit\Mock\TestObjectFactory;
 use Magento\Framework\App\RequestInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
 class FrontendAPIsRequestTest extends TestCase
 {
+    #[DataProvider('prepareData')]
     /**
      * @dataProvider prepareData
      * @param RequestHandlerInterface $controller
@@ -77,8 +80,7 @@ class FrontendAPIsRequestTest extends TestCase
     private function mockControllerAndRequest(string $class): array
     {
         $fullClassName = sprintf('Klarna\Kp\Controller\Klarna\%s', $class);
-        $mockFactory = new MockFactory($this);
-        $objectFactory = new TestObjectFactory($mockFactory);
+        $objectFactory = new TestObjectFactory('');
         $controller = $objectFactory->create($fullClassName);
         $dependencyMocks = $objectFactory->getDependencyMocks();
 

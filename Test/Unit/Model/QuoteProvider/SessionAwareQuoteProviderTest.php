@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © Klarna Bank AB (publ)
  *
@@ -14,6 +15,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Phrase;
 use Magento\Quote\Api\Data\CartInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -33,6 +35,7 @@ class SessionAwareQuoteProviderTest extends TestCase
         $this->assertSame($quote, $result);
     }
 
+    #[DataProvider('exceptionListProvider')]
     /**
      * @dataProvider exceptionListProvider
      */
@@ -47,7 +50,7 @@ class SessionAwareQuoteProviderTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function exceptionListProvider(): array
+    public static function exceptionListProvider(): array
     {
         return [
             [new NoSuchEntityException()],

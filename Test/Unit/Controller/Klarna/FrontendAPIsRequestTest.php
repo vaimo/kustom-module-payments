@@ -35,19 +35,19 @@ class FrontendAPIsRequestTest extends TestCase
         $this->assertEquals(get_class($request), get_class($controller->getRequest()));
     }
 
-    public function prepareData(): array
+    public static function prepareData(): array
     {
-        $classes = $this->getClassesInDirectory();
+        $classes = self::getClassesInDirectory();
 
         $data = [];
         foreach ($classes as $class) {
-            $data[] = $this->mockControllerAndRequest($class);
+            $data[] = self::mockControllerAndRequest($class);
         }
 
         return $data;
     }
 
-    private function getClassesInDirectory(): array
+    private static function getClassesInDirectory(): array
     {
         $collectedClasses = [];
 
@@ -77,7 +77,7 @@ class FrontendAPIsRequestTest extends TestCase
         return array_merge(...$collectedClasses);
     }
 
-    private function mockControllerAndRequest(string $class): array
+    private static function mockControllerAndRequest(string $class): array
     {
         $fullClassName = sprintf('Klarna\Kp\Controller\Klarna\%s', $class);
         $objectFactory = new TestObjectFactory('');

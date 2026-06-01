@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © Klarna Bank AB (publ)
  *
@@ -12,6 +13,7 @@ use Klarna\Kp\Api\QuoteAuthCallbackTokenInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Api\Data\CartInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Klarna\Base\Test\Unit\Mock\TestCase;
 
@@ -21,6 +23,14 @@ class RequestValidatorTest extends TestCase
      * @var RequestValidator
      */
     private RequestValidator $requestValidator;
+
+    /**
+     * @inheritDoc
+     */
+    protected function setUp(): void
+    {
+        $this->requestValidator = parent::setUpMocks(RequestValidator::class);
+    }
 
     /**
      * @return void
@@ -44,6 +54,7 @@ class RequestValidatorTest extends TestCase
         $this->expectNotToPerformAssertions();
     }
 
+    #[DataProvider('requestBodyData')]
     /**
      * @dataProvider requestBodyData
      *
@@ -74,7 +85,9 @@ class RequestValidatorTest extends TestCase
             ->method('getParam')
             ->willReturn('correct-token');
 
-        $klarnaQuote = $this->getMockForAbstractClass(QuoteAuthCallbackTokenInterface::class);
+        $klarnaQuote = $this->getMockBuilder(QuoteAuthCallbackTokenInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $klarnaQuote
             ->method('getAuthTokenCallbackToken')
             ->willReturn('correct-token');
@@ -98,7 +111,9 @@ class RequestValidatorTest extends TestCase
             ->method('getParam')
             ->willReturn('wrong-token');
 
-        $klarnaQuote = $this->getMockForAbstractClass(QuoteAuthCallbackTokenInterface::class);
+        $klarnaQuote = $this->getMockBuilder(QuoteAuthCallbackTokenInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $klarnaQuote
             ->method('getAuthTokenCallbackToken')
             ->willReturn('actual-token');
@@ -110,7 +125,9 @@ class RequestValidatorTest extends TestCase
 
     public function testVerifyMagentoQuoteShouldNotThrowExceptionIfMagentoQuoteExistsAndIsActive(): void
     {
-        $magentoQuote = $this->getMockForAbstractClass(CartInterface::class);
+        $magentoQuote = $this->getMockBuilder(CartInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $magentoQuote->method('getIsActive')
             ->willReturn(true);
 
@@ -139,7 +156,9 @@ class RequestValidatorTest extends TestCase
 
     public function testVerifyMagentoQuoteShouldThrowExceptionIfMagentoQuoteIsNotActive(): void
     {
-        $magentoQuote = $this->getMockForAbstractClass(CartInterface::class);
+        $magentoQuote = $this->getMockBuilder(CartInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $magentoQuote->method('getIsActive')
             ->willReturn(false);
 
@@ -157,44 +176,39 @@ class RequestValidatorTest extends TestCase
     /**
      * @return array
      */
-    public function requestBodyData()
+    public static function requestBodyData()
     {
         return [
             [
-                'data' => json_encode(''),
-                'message' => 'session_id is required.',
+                'requestContent' => json_encode(''),
+                'exceptionMessage' => 'session_id is required.',
             ],
             [
-                json_encode([
+                'requestContent' => json_encode([
                     'authorization_token' => 'a-random-value',
                 ]),
-                'message' => 'session_id is required.',
+                'exceptionMessage' => 'session_id is required.',
             ],
             [
-                json_encode([
+                'requestContent' => json_encode([
                     'session_id' => '',
                     'authorization_token' => 'a-random-value',
                 ]),
-                'message' => 'session_id is required.',
+                'exceptionMessage' => 'session_id is required.',
             ],
             [
-                json_encode([
+                'requestContent' => json_encode([
                     'session_id' => 'a-random-value',
                     'authorization_token' => '',
                 ]),
-                'message' => 'authorization_token is required.',
+                'exceptionMessage' => 'authorization_token is required.',
             ],
             [
-                json_encode([
+                'requestContent' => json_encode([
                     'session_id' => 'a-random-value',
                 ]),
-                'message' => 'authorization_token is required.',
+                'exceptionMessage' => 'authorization_token is required.',
             ],
         ];
-    }
-
-    protected function setUp(): void
-    {
-        $this->requestValidator = parent::setUpMocks(RequestValidator::class);
     }
 }

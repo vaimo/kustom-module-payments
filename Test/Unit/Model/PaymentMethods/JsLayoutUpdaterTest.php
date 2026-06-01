@@ -104,7 +104,7 @@ class JsLayoutUpdaterTest extends TestCase
     {
         return [
             [
-                'configuration' =>
+                'initialConfiguration' =>
                     [
                         'klarna' => [
                             'methods' => [
